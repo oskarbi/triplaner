@@ -75,6 +75,9 @@ var loadStops = function() {
 
 var makeInfoWindowEvent = function(infoWindow, marker) {
     return function() {
+        if (window.lastInfowindow !== undefined) {
+            lastInfowindow.close();
+        }
         infoWindow.open(theMap, marker);
         lastInfowindow = infoWindow;
     };
