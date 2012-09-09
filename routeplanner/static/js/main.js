@@ -149,11 +149,16 @@ var ejecuta = function() {
             positionArray[i] = markers[json.stop_list[i]].position;
         }
 
-        var polyline = new google.maps.Polyline({
-            map: theMap,
-            path: positionArray,
-            strokeColor: "#F00"
-        });
+        if (window.polyline === undefined) {
+            polyline = new google.maps.Polyline({
+                map: theMap,
+                path: positionArray,
+                strokeColor: "#F00"
+            });
+        } else {
+            window.polyline.setPath(positionArray);
+        }
+
     };
     $.getJSON("/route/", ajax_params, ajax_callback);
 };
