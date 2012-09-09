@@ -73,13 +73,10 @@ var loadStops = function() {
     }
 };
 
-var makeInfoWindowHtml = function(stopId) {
-    return getInfoWindowHtml(stopId, window.originStop);
-};
-
 var makeInfoWindowEvent = function(infoWindow, marker) {
     return function() {
         infoWindow.open(theMap, marker);
+        lastInfowindow = infoWindow;
     };
 };
 
@@ -89,7 +86,7 @@ var makeInfoWindowEvent = function(infoWindow, marker) {
  * This InfoWindow allows to select the Stop as the origin, if not defined yet.
  * In other case allows to select the Stop as the destination.
  */
-var getInfoWindowHtml = function(stopId, orStop) {
+var getInfoWindowHtml = function(stopId) {
     var html = "";
     html += "<strong>Stop ID:</strong> " + stopId + "<br/>";
 
@@ -149,7 +146,6 @@ var ejecuta = function() {
         }
 
         var positionArray = new Array();
-
         for (i in json.response.path) {
             positionArray[i] = markers[json.response.path[i]].position;
         }
