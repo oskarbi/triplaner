@@ -4,6 +4,21 @@ $(document).ready(function() {
     loadStops();
 });
 
+var blue_icon = new google.maps.MarkerImage(
+    '/static/images/circle_blue.png',
+    new google.maps.Size(27,22),
+    // The origin for this image is 0,0.
+    new google.maps.Point(0,0),
+    // The anchor for this image is the base of the flagpole at 0,32.
+    new google.maps.Point(14,11)
+);
+var green_icon = new google.maps.MarkerImage(
+    '/static/images/marker_green.png'
+);
+var red_icon = new google.maps.MarkerImage(
+    '/static/images/marker_dark_red.png'
+);
+
 /**
  * Create and show a GoogleMap in the page.
  */
@@ -31,15 +46,6 @@ var loadMap = function() {
  * Load into the map the Stops available in the SimpleRouting graph.
  */
 var loadStops = function() {
-    var blue_icon = new google.maps.MarkerImage(
-        '/static/images/circle_blue.png',
-        new google.maps.Size(27,22),
-        // The origin for this image is 0,0.
-        new google.maps.Point(0,0),
-        // The anchor for this image is the base of the flagpole at 0,32.
-        new google.maps.Point(14,11)
-    );
-
     markers = Array();
     infoWindows = Array();
 
@@ -104,9 +110,13 @@ var getInfoWindowHtml = function(stopId, orStop) {
  * Set a given Stop as the origin of the route.
  */
 var selectOriginStop = function(stopId) {
+    if (window.originStop !== undefined) {
+        markers[originStop].setIcon(blue_icon);
+    }
+    markers[stopId].setIcon(green_icon);
+
     originStop = stopId;
     infoWindows[stopId].close();
-
     ejecuta();
 };
 
@@ -114,9 +124,13 @@ var selectOriginStop = function(stopId) {
  * Set a given Stop as the destination of the route.
  */
 var selectDestinationStop = function(stopId) {
+    if (window.destinationStop !== undefined) {
+        markers[destinationStop].setIcon(blue_icon);
+    }
+    markers[stopId].setIcon(red_icon);
+
     destinationStop = stopId;
     infoWindows[stopId].close();
-
     ejecuta();
 };
 
@@ -143,33 +157,3 @@ var ejecuta = function() {
     };
     $.getJSON("/route/", ajax_params, ajax_callback);
 };
-
-// var highlightRequest = function(argument) {
-//     var red_icon = new google.maps.MarkerImage(
-//         '/static/images/red.png',
-//         new google.maps.Size(27,22),
-//         // The origin for this image is 0,0.
-//         new google.maps.Point(0,0),
-//         // The anchor for this image is the base of the flagpole at 0,32.
-//         new google.maps.Point(14,11)
-//     );
-//     var purple_icon = new google.maps.MarkerImage(
-//         '/static/images/purple.png',
-//         new google.maps.Size(27,22),
-//         // The origin for this image is 0,0.
-//         new google.maps.Point(0,0),
-//         // The anchor for this image is the base of the flagpole at 0,32.
-//         new google.maps.Point(14,11)
-//     );
-
-//     originStopId = request[0];
-//     destinationStopId = request[1];
-//     for (var i=0; i<markerList.length; i++) {
-//         if (markerList[i].stopId == originStopId) {
-//             markerList[i].icon = purple_icon;
-//         } else if (markerList[i].stopId == destinationStopId) {
-//             markerList[i].icon = red_icon;
-//         }
-
-//     }
-// }
