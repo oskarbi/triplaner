@@ -27,19 +27,19 @@ def get_route(request):
     router = simple_routing.Router()
     router.load_graph()
 
-    results = {'success': "Error"}
-    if request.method == u'GET':
-        origin = request.GET[u'origin']
-        destination = request.GET[u'destination']
-        results = {'success': "me pides ir desde %s hasta %s" % (origin, destination)}
-        try:
-            path, dist = router.run(origin, destination)
-        except Exception as ex:
-            results = {'success': str(ex)}
+    origin = request.GET[u'origin']
+    destination = request.GET[u'destination']
 
-    results['request'] = [origin, destination]
-    results['distance'] = dist
-    results['stop_list'] = path
+    response = {}
+    response['request'] = [origin, destination]
+    try:
+        path, dist = router.run(origin, destination)
+        response['result_code'] = 0
+        response['response'] = {'path': path,
+                                'distance': dist}
+    except Exception as ex:
+        response['result_code'] = 1
+        response['result_msg'] = "An error ocurred calculating your trip."
 
-    json = simplejson.dumps(results)
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(simplejson.dumps(response),
+                        mimetype='application/json')

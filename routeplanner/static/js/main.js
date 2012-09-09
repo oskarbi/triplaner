@@ -143,10 +143,15 @@ var ejecuta = function() {
     var ajax_params = {origin: window.originStop,
                        destination: window.destinationStop};
     var ajax_callback = function(json) {
+        if (json.result_code > 0) {
+            alert(json.result_msg);
+            return;
+        }
+
         var positionArray = new Array();
 
-        for (i in json.stop_list) {
-            positionArray[i] = markers[json.stop_list[i]].position;
+        for (i in json.response.path) {
+            positionArray[i] = markers[json.response.path[i]].position;
         }
 
         if (window.polyline === undefined) {
