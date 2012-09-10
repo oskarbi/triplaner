@@ -24,15 +24,14 @@ def home(request):
     return render_to_response(template_name, template_fields)
 
 def get_route(request):
-    router = simple_routing.Router()
-    router.load_graph()
-
     origin = request.GET[u'origin']
     destination = request.GET[u'destination']
 
     response = {}
     response['request'] = [origin, destination]
     try:
+        router = simple_routing.Router()
+        router.load_graph()
         path, dist = router.run(origin, destination)
         response['result_code'] = 0
         response['response'] = {'path': path,

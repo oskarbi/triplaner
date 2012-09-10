@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $("#div_map").text("Loading map...");
+    $("#map").text("Loading map...");
     theMap = loadMap();
     loadStops();
 });
@@ -37,7 +37,7 @@ var loadMap = function() {
         streetViewControl : false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var theMap = new google.maps.Map($("#div_map")[0], mapOptions);
+    var theMap = new google.maps.Map($("#map")[0], mapOptions);
 
     return theMap;
 };
