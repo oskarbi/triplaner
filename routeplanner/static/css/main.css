@@ -11,8 +11,26 @@
     float: left;
 }
 
-ul
+div.instructions ul
+{
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+div.todo-list ul
 {
     list-style-type: circle;
     padding-left: 20px;
+}
+
+div.social {
+    text-align: center;
+    margin-top: 50px;
+}
+
+div.social img {
+    max-height: 48px;
+    max-width: 48px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
