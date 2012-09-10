@@ -5,7 +5,7 @@ $(document).ready(function() {
 });
 
 var blue_icon = new google.maps.MarkerImage(
-    '/static/images/circle_blue.png',
+    '/static/img/circle_blue.png',
     new google.maps.Size(27,22),
     // The origin for this image is 0,0.
     new google.maps.Point(0,0),
@@ -13,10 +13,10 @@ var blue_icon = new google.maps.MarkerImage(
     new google.maps.Point(14,11)
 );
 var green_icon = new google.maps.MarkerImage(
-    '/static/images/marker_green.png'
+    '/static/img/marker_green.png'
 );
 var red_icon = new google.maps.MarkerImage(
-    '/static/images/marker_dark_red.png'
+    '/static/img/marker_dark_red.png'
 );
 
 /**
