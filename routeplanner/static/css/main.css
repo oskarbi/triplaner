@@ -1,11 +1,18 @@
 #map {
-    width: 80%;
+    width: 70%;
     height: 95%;
     margin: 10px;
     float: left;
 }
 
 #sidebar {
+    width: 20%;
     margin: 10px;
     float: left;
+}
+
+ul
+{
+    list-style-type: circle;
+    padding-left: 20px;
 }

@@ -46,8 +46,8 @@ var loadMap = function() {
  * Load into the map the Stops available in the SimpleRouting graph.
  */
 var loadStops = function() {
-    markers = Array();
-    infoWindows = Array();
+    markers = [];
+    infoWindows = [];
 
     for (i in geodata) {
         var stop = geodata[i];
@@ -148,7 +148,7 @@ var ejecuta = function() {
             return;
         }
 
-        var positionArray = new Array();
+        var positionArray = [];
         for (i in json.response.path) {
             positionArray[i] = markers[json.response.path[i]].position;
         }
