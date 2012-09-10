@@ -2,6 +2,7 @@ $(document).ready(function() {
     $("#map").text("Loading map...");
     theMap = loadMap();
     loadStops();
+    centerMap();
 });
 
 var blue_icon = new google.maps.MarkerImage(
@@ -24,9 +25,9 @@ var red_icon = new google.maps.MarkerImage(
  */
 var loadMap = function() {
     var mapOptions = {
-        zoom : 11,
-        disableDoubleClickZoom : true,
-        center : new google.maps.LatLng(43.325, -2.00),
+        zoom: 11,
+        disableDoubleClickZoom: true,
+        center: new google.maps.LatLng(43.325, -2.00),
         tileSize: new google.maps.Size(256, 256),
         panControl: false,
         scaleControl: true,
@@ -34,7 +35,7 @@ var loadMap = function() {
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.SMALL
         },
-        streetViewControl : false,
+        streetViewControl: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var theMap = new google.maps.Map($("#map")[0], mapOptions);
@@ -72,6 +73,18 @@ var loadStops = function() {
         infoWindows[stop.stop_id] = infoWindow;
     }
 };
+
+/**
+ * Adjust map's bounds and zoom to fit the list of showed stops.
+ */
+var centerMap = function() {
+    var mapBounds = new google.maps.LatLngBounds();
+    for (i in markers) {
+        mapBounds.extend(markers[i].position);
+    }
+    // theMap.fitBounds(mapBounds);
+};
+
 
 var makeInfoWindowEvent = function(infoWindow, marker) {
     return function() {
