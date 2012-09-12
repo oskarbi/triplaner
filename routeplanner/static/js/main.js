@@ -82,7 +82,7 @@ var centerMap = function() {
     for (i in markers) {
         mapBounds.extend(markers[i].position);
     }
-    theMap.fitBounds(mapBounds);
+    // theMap.fitBounds(mapBounds);
 };
 
 
