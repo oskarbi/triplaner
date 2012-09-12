@@ -13,6 +13,14 @@ var blue_icon = new google.maps.MarkerImage(
     // The anchor for this image is the base of the flagpole at 0,32.
     new google.maps.Point(14,11)
 );
+var purple_icon = new google.maps.MarkerImage(
+    '/static/img/circle_purple.png',
+    new google.maps.Size(27,22),
+    // The origin for this image is 0,0.
+    new google.maps.Point(0,0),
+    // The anchor for this image is the base of the flagpole at 0,32.
+    new google.maps.Point(14,11)
+);
 var green_icon = new google.maps.MarkerImage(
     '/static/img/marker_green.png'
 );
@@ -161,10 +169,21 @@ var ejecuta = function() {
             return;
         }
 
+        // Restore the original icon for all the markers
+        for (i in markers) {
+            markers[i].setIcon(blue_icon);
+        }
+
         var positionArray = [];
         for (i in json.response.path) {
+            // Purple icon for the stops in the path
+            markers[json.response.path[i]].setIcon(purple_icon);
             positionArray[i] = markers[json.response.path[i]].position;
         }
+
+        // Restore the icons for the markers of the origin and destination
+        markers[window.originStop].setIcon(green_icon);
+        markers[window.destinationStop].setIcon(red_icon);
 
         if (window.polyline === undefined) {
             polyline = new google.maps.Polyline({
