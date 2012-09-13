@@ -5,28 +5,11 @@ $(document).ready(function() {
     centerMap();
 });
 
-var blue_icon = new google.maps.MarkerImage(
-    '/static/img/circle_blue.png',
-    new google.maps.Size(27,22),
-    // The origin for this image is 0,0.
-    new google.maps.Point(0,0),
-    // The anchor for this image is the base of the flagpole at 0,32.
-    new google.maps.Point(14,11)
-);
-var purple_icon = new google.maps.MarkerImage(
-    '/static/img/circle_purple.png',
-    new google.maps.Size(27,22),
-    // The origin for this image is 0,0.
-    new google.maps.Point(0,0),
-    // The anchor for this image is the base of the flagpole at 0,32.
-    new google.maps.Point(14,11)
-);
-var green_icon = new google.maps.MarkerImage(
-    '/static/img/marker_green.png'
-);
-var red_icon = new google.maps.MarkerImage(
-    '/static/img/marker_dark_red.png'
-);
+var icon_mini_blue = '/static/img/mm_20_blue.png';
+var icon_mini_green = '/static/img/mm_20_green.png';
+var icon_mini_red = '/static/img/mm_20_red.png';
+var icon_mini_yellow = '/static/img/mm_20_yellow.png';
+var icon_mini_transparent_blue = '/static/img/mm_20_blue_trans.png';
 
 /**
  * Create and show a GoogleMap in the page.
@@ -66,7 +49,7 @@ var loadStops = function() {
             map: theMap,
             position: new google.maps.LatLng(stop.lat, stop.lon),
             draggable: false,
-            icon: blue_icon,
+            icon: icon_mini_blue,
             // Triplaner properties
             stopId: stop.stop_id
         });
@@ -132,9 +115,9 @@ var getInfoWindowHtml = function(stopId) {
  */
 var selectOriginStop = function(stopId) {
     if (window.originStop !== undefined) {
-        markers[originStop].setIcon(blue_icon);
+        markers[originStop].setIcon(icon_mini_blue);
     }
-    markers[stopId].setIcon(green_icon);
+    markers[stopId].setIcon(icon_mini_green);
 
     originStop = stopId;
     infoWindows[stopId].close();
@@ -146,9 +129,9 @@ var selectOriginStop = function(stopId) {
  */
 var selectDestinationStop = function(stopId) {
     if (window.destinationStop !== undefined) {
-        markers[destinationStop].setIcon(blue_icon);
+        markers[destinationStop].setIcon(icon_mini_blue);
     }
-    markers[stopId].setIcon(red_icon);
+    markers[stopId].setIcon(icon_mini_red);
 
     destinationStop = stopId;
     infoWindows[stopId].close();
@@ -169,21 +152,21 @@ var ejecuta = function() {
             return;
         }
 
-        // Restore the original icon for all the markers
+        // Make the non-included markers semitransparent
         for (i in markers) {
-            markers[i].setIcon(blue_icon);
+            markers[i].setIcon(icon_mini_transparent_blue);
         }
 
         var positionArray = [];
         for (i in json.response.path) {
-            // Purple icon for the stops in the path
-            markers[json.response.path[i]].setIcon(purple_icon);
+            // Yellow icon for the stops in the path
+            markers[json.response.path[i]].setIcon(icon_mini_yellow);
             positionArray[i] = markers[json.response.path[i]].position;
         }
 
-        // Restore the icons for the markers of the origin and destination
-        markers[window.originStop].setIcon(green_icon);
-        markers[window.destinationStop].setIcon(red_icon);
+        // Restore the green and red markers for the origin and destination
+        markers[window.originStop].setIcon(icon_mini_green);
+        markers[window.destinationStop].setIcon(icon_mini_red);
 
         if (window.polyline === undefined) {
             polyline = new google.maps.Polyline({
