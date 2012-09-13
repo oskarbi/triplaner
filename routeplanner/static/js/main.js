@@ -121,7 +121,7 @@ var selectOriginStop = function(stopId) {
 
     originStop = stopId;
     infoWindows[stopId].close();
-    ejecuta();
+    calculateTrip();
 };
 
 /**
@@ -135,10 +135,26 @@ var selectDestinationStop = function(stopId) {
 
     destinationStop = stopId;
     infoWindows[stopId].close();
-    ejecuta();
+    calculateTrip();
 };
 
-var ejecuta = function() {
+/**
+ * Change the icon of of a given marker to a yellow one
+ * after timeToDrop*100 miliseconds.
+ * The change is made with a DROP animation.
+ */
+var dropYellowMarker = function(marker, timeToDrop) {
+    setTimeout(function() {
+        marker.setAnimation(google.maps.Animation.DROP);
+        marker.setIcon(icon_mini_yellow);
+        }, timeToDrop * 100);
+}
+
+/**
+ * Ask the python Router to calculate the shortest path between
+ * the stops selected as origin and destination, and draw the result.
+ */
+var calculateTrip = function() {
     if (window.originStop === undefined
         || window.destinationStop === undefined) {
         return;
@@ -153,20 +169,26 @@ var ejecuta = function() {
         }
 
         // Make the non-included markers semitransparent
-        for (i in markers) {
-            markers[i].setIcon(icon_mini_transparent_blue);
+        for (stopId in markers) {
+            if (stopId !== window.originStop
+                && stopId !== window.destinationStop) {
+                markers[stopId].setIcon(icon_mini_transparent_blue);
+            }
         }
 
         var positionArray = [];
+        var timeToDrop = 0;
         for (i in json.response.path) {
+            var stopId = json.response.path[i];
             // Yellow icon for the stops in the path
-            markers[json.response.path[i]].setIcon(icon_mini_yellow);
-            positionArray[i] = markers[json.response.path[i]].position;
-        }
+            positionArray[i] = markers[stopId].position;
 
-        // Restore the green and red markers for the origin and destination
-        markers[window.originStop].setIcon(icon_mini_green);
-        markers[window.destinationStop].setIcon(icon_mini_red);
+            if (stopId !== window.originStop
+                && stopId !== window.destinationStop) {
+                dropYellowMarker(markers[stopId], timeToDrop);
+                timeToDrop++;
+            }
+        }
 
         if (window.polyline === undefined) {
             polyline = new google.maps.Polyline({
