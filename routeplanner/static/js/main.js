@@ -21,7 +21,7 @@ var loadMap = function() {
         center: new google.maps.LatLng(43.325, -2.00),
         tileSize: new google.maps.Size(256, 256),
         panControl: false,
-        scaleControl: true,
+        scaleControl: false,
         zoomControl: true,
         zoomControlOptions: {
             style: google.maps.ZoomControlStyle.SMALL
