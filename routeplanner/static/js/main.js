@@ -172,7 +172,7 @@ var calculateTrip = function() {
                        destination: window.destinationStop};
     var ajax_callback = function(json) {
         if (json.result_code > 0) {
-            alert(json.result_msg);
+            alert(json.response);
             return;
         }
 

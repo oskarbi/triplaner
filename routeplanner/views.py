@@ -46,7 +46,9 @@ def get_shortest_path(request):
                                 'distance': dist}
     except Exception as ex:
         response['result_code'] = 1
-        response['result_msg'] = "An error ocurred calculating your trip."
+        response['response'] = (
+            "Sorry, I can't find any path between those stops."
+            "\n\nPlease, try another combination.")
 
     return HttpResponse(simplejson.dumps(response),
                         mimetype='application/json')
