@@ -28,7 +28,7 @@ def home(request):
     template_fields = {'geodata': geodata}
     return render_to_response(template_name, template_fields)
 
-def get_route(request):
+def get_shortest_path(request):
     """Handle a GET request for a path between two stops.
 
     Return a JSON with the shortest path calculated by simple_routing.
