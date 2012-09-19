@@ -7,23 +7,32 @@ from json import loads
 from simplerouting.src import simple_routing
 
 def home(request):
+    """Load the main (and unique) page of Triplaner.
+
+    Return a JSON with the list of stops loaded in the graph by simple_routing.
+    """
     router = get_router()
 
-    lista_paradas = []
+    stop_list = []
     for stop_id in router.graph.get_stops():
         stop = router.graph.get_stop(stop_id)
-        lista_paradas.append({
+        stop_list.append({
             "stop_id": stop.stop_id,
             "lat": stop.lat,
-            "lon": stop.lon
+            "lon": stop.lon,
+            "stop_name": stop.name
             })
-    geodata = simplejson.dumps(lista_paradas)
+    geodata = simplejson.dumps(stop_list)
 
     template_name = 'base.html'
     template_fields = {'geodata': geodata}
     return render_to_response(template_name, template_fields)
 
 def get_route(request):
+    """Handle a GET request for a path between two stops.
+
+    Return a JSON with the shortest path calculated by simple_routing.
+    """
     origin = request.GET[u'origin']
     destination = request.GET[u'destination']
 

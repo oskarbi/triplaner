@@ -31,6 +31,11 @@ var loadMap = function() {
     };
     var theMap = new google.maps.Map($("#map")[0], mapOptions);
 
+    google.maps.event.addListener(theMap, 'click', function() {
+        if (window.openedInfoWindow !== undefined) {
+            openedInfoWindow.close();
+        }
+    });
     return theMap;
 };
 
@@ -51,11 +56,13 @@ var loadStops = function() {
             draggable: false,
             icon: icon_mini_blue,
             // Triplaner properties
-            stopId: stop.stop_id
+            stopId: stop.stop_id,
+            stopName: stop.stop_name
         });
 
         var infoWindow = new google.maps.InfoWindow();
-        var infoWindowHtml = getInfoWindowHtml(stopMarker.stopId);
+        var infoWindowHtml = getInfoWindowHtml(stopMarker.stopId,
+                                               stopMarker.stopName);
         infoWindow.setContent(infoWindowHtml);
         google.maps.event.addListener(stopMarker, 'click',
             makeInfoWindowEvent(infoWindow, stopMarker));
@@ -79,11 +86,11 @@ var centerMap = function() {
 
 var makeInfoWindowEvent = function(infoWindow, marker) {
     return function() {
-        if (window.lastInfowindow !== undefined) {
-            lastInfowindow.close();
+        if (window.openedInfoWindow !== undefined) {
+            openedInfoWindow.close();
         }
         infoWindow.open(theMap, marker);
-        lastInfowindow = infoWindow;
+        openedInfoWindow = infoWindow;
     };
 };
 
@@ -93,9 +100,10 @@ var makeInfoWindowEvent = function(infoWindow, marker) {
  * This InfoWindow allows to select the Stop as the origin, if not defined yet.
  * In other case allows to select the Stop as the destination.
  */
-var getInfoWindowHtml = function(stopId) {
+var getInfoWindowHtml = function(stopId, stopName) {
     var html = "";
-    html += "<strong>Stop ID:</strong> " + stopId + "<br/>";
+    html += "<strong>Stop " + stopId + ":</strong> " + stopName + "<br/><br/>";
+    // html += "<strong>Stop Name:</strong> " + stopName + "<br/>";
 
     // if (window.originStop === undefined) {
         html += "<button onclick='selectOriginStop(\"" + stopId + "\");'>";
@@ -139,15 +147,15 @@ var selectDestinationStop = function(stopId) {
 };
 
 /**
- * Change the icon of of a given marker to a yellow one
- * after timeToDrop*100 miliseconds.
+ * Change the icon of of a given marker to a yellow one after timeToDrop
+ * miliseconds.
  * The change is made with a DROP animation.
  */
 var dropYellowMarker = function(marker, timeToDrop) {
     setTimeout(function() {
         marker.setAnimation(google.maps.Animation.DROP);
         marker.setIcon(icon_mini_yellow);
-        }, timeToDrop * 100);
+        }, timeToDrop);
 }
 
 /**
@@ -185,7 +193,7 @@ var calculateTrip = function() {
 
             if (stopId !== window.originStop
                 && stopId !== window.destinationStop) {
-                dropYellowMarker(markers[stopId], timeToDrop);
+                dropYellowMarker(markers[stopId], timeToDrop*75);
                 timeToDrop++;
             }
         }
