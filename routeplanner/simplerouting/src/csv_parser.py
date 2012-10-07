@@ -4,8 +4,8 @@ from models import Stop, Graph
 
 def parse_stops():
     stop_list = []
-    path = dirname(abspath(__file__))
-    with open(join(path, "stops.txt")) as stops_file:
+    path = dirname(dirname(abspath(__file__)))
+    with open(join(path, "gtfs/stops.txt")) as stops_file:
         stops_csv = csv.reader(stops_file)
         stops_csv.next() # Skip CSV's header
         for stop_line in stops_csv:
@@ -19,8 +19,8 @@ def parse_stops():
 
 def parse_stop_times():
     trip_list = {}
-    path = dirname(abspath(__file__))
-    with open(join(path, "stop_times.txt")) as stoptimes_file:
+    path = dirname(dirname(abspath(__file__)))
+    with open(join(path, "gtfs/stop_times.txt")) as stoptimes_file:
         stoptimes_csv = csv.reader(stoptimes_file)
         stoptimes_csv.next() # Skip CSV's header
         for stoptime_line in stoptimes_csv:
