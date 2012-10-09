@@ -109,18 +109,18 @@ var TRIPLANER = function() {
     var getInfoWindowHtml = function(stopId, stopName) {
         var html = "";
         html += "<strong>Stop " + stopId + ":</strong> " + stopName + "<br/><br/>";
-        // html += "<strong>Stop Name:</strong> " + stopName + "<br/>";
 
-        // if (window.originStop === undefined) {
-            html += "<button onclick='TRIPLANER.selectOriginStop(\"" + stopId + "\");'>";
-            html += "Select as origin";
-            html += "</button>"
-        // } else {
-            html += "<button onclick='TRIPLANER.selectDestinationStop(\"" + stopId + "\");'>";
-            html += "Select as destination";
-        // }
-
+        html += "<button onclick='TRIPLANER.selectOriginStop(\"" + stopId + "\");'>";
+        html += "Select as origin";
+        html += "</button>"
+        html += "<button onclick='TRIPLANER.selectDestinationStop(\"" + stopId + "\");'>";
+        html += "Select as destination";
         html += "</button>";
+        html += "<br/>";
+        html += "<button onclick='TRIPLANER.showConnectedStops(\"" + stopId + "\");'>";
+        html += "Show connected stops";
+        html += "</button>"
+
         return html;
     };
 
@@ -218,10 +218,43 @@ var TRIPLANER = function() {
         $.getJSON("/route/", ajax_params, ajax_callback);
     };
 
+    var showConnectedStops = function(stop_id) {
+        var ajax_params = {stop_id: stop_id};
+        var ajax_callback = function(json) {
+            if (json.result_code > 0) {
+                alert(json.response);
+                return;
+            }
+
+            // Make the non-included markers semitransparent
+            for (stopId in markers) {
+                if (stopId !== stop_id) {
+                    markers[stopId].setIcon(icon_mini_transparent_blue);
+                }
+            }
+
+            for (i in json.response.connected_stops) {
+                var stopId = json.response.connected_stops[i];
+                // Yellow icon for the stops in the connected_stops list
+                if (stopId !== window.originStop
+                    && stopId !== window.destinationStop) {
+                    markers[stopId].setIcon(icon_mini_yellow);
+                }
+            }
+
+            if (window.polyline !== undefined) {
+                window.polyline = null;
+            }
+
+        };
+        $.getJSON("/connected-stops/", ajax_params, ajax_callback);
+    };
+
     return {
         init: init,
         selectOriginStop: selectOriginStop,
-        selectDestinationStop: selectDestinationStop
+        selectDestinationStop: selectDestinationStop,
+        showConnectedStops: showConnectedStops
     };
 
 }();

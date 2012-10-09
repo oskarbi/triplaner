@@ -3,7 +3,6 @@ from django.core.cache import cache
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 
-from json import loads
 from simplerouting.src import simple_routing
 
 def home(request):
@@ -44,11 +43,39 @@ def get_shortest_path(request):
         response['result_code'] = 0
         response['response'] = {'path': path,
                                 'distance': dist}
-    except Exception as ex:
+    except:
         response['result_code'] = 1
         response['response'] = (
             "Sorry, I can't find any path between those stops."
             "\n\nPlease, try another combination.")
+
+    return HttpResponse(simplejson.dumps(response),
+                        mimetype='application/json')
+
+def get_connected_stops(request):
+    """Handle a GET request for the neighbors of a stop.
+
+    Return a JSON with the list of neighbors' identifiers.
+    """
+    stop_id = request.GET[u'stop_id']
+
+    response = {}
+    response['request'] = [stop_id]
+    try:
+        router = get_router()
+        stop_neighbors = router.graph.get_stop(stop_id).get_neighbors()
+        stop_trips = router.graph.get_stop(stop_id).get_trips()
+        stop_neighbors = []
+        for trip_id in stop_trips:
+            for stop_id in router.graph.trips[trip_id]:
+                if not stop_id in stop_neighbors:
+                    stop_neighbors.append(stop_id)
+        response['response'] = {'connected_stops': stop_neighbors}
+    except Exception as ex:
+        response['result_code'] = 1
+        response['response'] = (
+            "Sorry, I can't find any stops connected to %s." % stop_id)
+        response['response'] = (str(ex))
 
     return HttpResponse(simplejson.dumps(response),
                         mimetype='application/json')
