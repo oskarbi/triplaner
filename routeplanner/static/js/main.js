@@ -129,11 +129,11 @@ var TRIPLANER = function() {
      */
     var selectOriginStop = function(stopId) {
         if (window.originStop !== undefined) {
-            markers[originStop].setIcon(icon_mini_blue);
+            markers[window.originStop].setIcon(icon_mini_blue);
         }
         markers[stopId].setIcon(icon_mini_green);
 
-        originStop = stopId;
+        window.originStop = stopId;
         infoWindows[stopId].close();
         calculateTrip();
     };
@@ -143,11 +143,11 @@ var TRIPLANER = function() {
      */
     var selectDestinationStop = function(stopId) {
         if (window.destinationStop !== undefined) {
-            markers[destinationStop].setIcon(icon_mini_blue);
+            markers[window.destinationStop].setIcon(icon_mini_blue);
         }
         markers[stopId].setIcon(icon_mini_red);
 
-        destinationStop = stopId;
+        window.destinationStop = stopId;
         infoWindows[stopId].close();
         calculateTrip();
     };
@@ -205,7 +205,7 @@ var TRIPLANER = function() {
             }
 
             if (window.polyline === undefined) {
-                polyline = new google.maps.Polyline({
+                window.polyline = new google.maps.Polyline({
                     map: theMap,
                     path: positionArray,
                     strokeColor: "#F00"
@@ -218,6 +218,9 @@ var TRIPLANER = function() {
         $.getJSON("/route/", ajax_params, ajax_callback);
     };
 
+    /**
+     * Show the stops connected to a given stop_id.
+     */
     var showConnectedStops = function(stop_id) {
         var ajax_params = {stop_id: stop_id};
         var ajax_callback = function(json) {
@@ -243,7 +246,10 @@ var TRIPLANER = function() {
             }
 
             if (window.polyline !== undefined) {
-                window.polyline = null;
+                window.polyline.setMap(null);
+                window.polyline = undefined;
+                window.originStop = undefined;
+                window.destinationStop = undefined;
             }
 
         };
