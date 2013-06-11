@@ -229,6 +229,8 @@ var TRIPLANER = function() {
                 return;
             }
 
+            infoWindows[stop_id].close();
+
             // Make the non-included markers semitransparent
             for (stopId in markers) {
                 if (stopId !== stop_id) {
